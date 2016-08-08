@@ -1,4 +1,9 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in chip_8.gemspec
-gemspec
+gem 'gosu'
+
+group :development, :test do
+  gem 'rake'
+  gem 'rspec'
+  gem 'byebug'
+end

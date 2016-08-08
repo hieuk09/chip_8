@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require_relative "../lib/chip_8"
+
+renderer = Chip8::Renderer.new
+chip = Chip8::Main.new(renderer: renderer)
+chip.open('roms/INVADERS')
+chip.start
