@@ -2,9 +2,10 @@ require 'matrix'
 
 module Chip8
   class Main
-    attr_reader :memory, :registers, :delay_timer, :stack,
+    attr_reader :memory, :registers, :stack,
       :display, :width, :height
-    attr_accessor :draw_flag, :program_counter, :register_i, :running
+    attr_accessor :draw_flag, :program_counter, :register_i, :running,
+      :delay_timer
 
     def initialize
       @memory = Array.new(0x1000)
@@ -208,7 +209,7 @@ module Chip8
               end
 
               value = display[a, b] ^ 1
-              display.send(:'[]=', a, b, display)
+              display.send(:'[]=', a, b, value)
 
               registers[0xF] = 1
             end
