@@ -212,7 +212,7 @@ module Chip8
               value = display[a, b] ^ 1
               display.send(:'[]=', a, b, value)
 
-              if !display[a, b]
+              if !(display[a, b] > 0)
                 registers[0xF] = 1
               end
             end
