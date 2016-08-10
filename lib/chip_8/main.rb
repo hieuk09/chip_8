@@ -2,10 +2,12 @@ require 'matrix'
 
 module Chip8
   class Main
-    attr_reader :memory, :registers, :stack,
-      :display, :width, :height
+    attr_reader :memory, :registers, :stack
     attr_accessor :draw_flag, :program_counter, :register_i, :running,
-      :delay_timer
+      :delay_timer, :display
+
+    WIDTH = 64
+    HEIGHT = 32
 
     def initialize
       @memory = Array.new(0x1000)
@@ -16,9 +18,7 @@ module Chip8
       @register_i = nil
       @delay_timer = 0
       @running = false
-      @width = 64
-      @height = 32
-      @display = Matrix.build(width, height) { 0 }
+      @display = new_matrix
 
       (0..0x1000 - 1).each do |i|
         memory[i] = 0
@@ -83,6 +83,7 @@ module Chip8
         case opcode
         when 0x00E0
           # clear
+          self.display = new_matrix
         when 0x00EE
           self.program_counter = stack.pop
         end
@@ -196,22 +197,24 @@ module Chip8
               a = x + j
               b = y + i
 
-              if a > width
-                a -= width
+              if a > WIDTH
+                a -= WIDTH
               elsif a < 0
-                a += width
+                a += WIDTH
               end
 
-              if b > height
-                b -= height
+              if b > HEIGHT
+                b -= HEIGHT
               elsif b < 0
-                b += height
+                b += HEIGHT
               end
 
               value = display[a, b] ^ 1
               display.send(:'[]=', a, b, value)
 
-              registers[0xF] = 1
+              if !display[a, b]
+                registers[0xF] = 1
+              end
             end
             data <<= 1
           end
@@ -261,6 +264,12 @@ module Chip8
           end
         end
       end
+    end
+
+    private
+
+    def new_matrix
+      Matrix.build(WIDTH, HEIGHT) { 0 }
     end
   end
 end

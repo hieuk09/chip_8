@@ -28,10 +28,10 @@ module Chip8
         @chip.display.each_with_index do |tile, x, y|
           color = tile == 0 ? Gosu::Color::BLACK : Gosu::Color::WHITE
           draw_quad(
-            x, y, color,
-            x + 9, y, color,
-            x, y + 9, color,
-            x + 9, y + 9, color,
+            x * 10, y * 10, color,
+            (x + 1) * 10, y * 10, color,
+            x * 10, (y + 1) * 10, color,
+            (x + 1) * 10, (y + 1) * 10, color,
             0
           )
         end
