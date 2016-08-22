@@ -13,7 +13,7 @@ module Chip8
       @memory = Array.new(0x1000)
       @registers = Array.new(16)
       @stack = Array.new
-      @program_counter = 0
+      @program_counter = 0x200
       @draw_flag = false
       @register_i = nil
       @delay_timer = 0
@@ -82,8 +82,8 @@ module Chip8
       when 0x0000
         case opcode
         when 0x00E0
-          # clear
           self.display = new_matrix
+          self.draw_flag = true
         when 0x00EE
           self.program_counter = stack.pop
         end
@@ -212,7 +212,7 @@ module Chip8
               value = display[a, b] ^ 1
               display.send(:'[]=', a, b, value)
 
-              if !(display[a, b] > 0)
+              if display[a, b] == 0
                 registers[0xF] = 1
               end
             end
@@ -244,7 +244,6 @@ module Chip8
 
         when 0x0029
           self.register_i = registers[register_index_1] * 5
-          self.register_i %= 256
 
         when 0x0033
           value = registers[register_index_1]

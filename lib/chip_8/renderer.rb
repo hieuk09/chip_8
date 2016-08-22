@@ -20,6 +20,8 @@ module Chip8
         self.caption = "Something #{@timer}"
         @chip.run
         @timer += 1
+      else
+        close
       end
     end
 
