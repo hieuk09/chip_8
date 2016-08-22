@@ -197,13 +197,13 @@ module Chip8
               a = x + j
               b = y + i
 
-              if a > WIDTH
+              if a >= WIDTH
                 a -= WIDTH
               elsif a < 0
                 a += WIDTH
               end
 
-              if b > HEIGHT
+              if b >= HEIGHT
                 b -= HEIGHT
               elsif b < 0
                 b += HEIGHT
@@ -240,7 +240,6 @@ module Chip8
 
         when 0x001E
           self.register_i += registers[register_index_1]
-          self.register_i %= 256
 
         when 0x0029
           self.register_i = registers[register_index_1] * 5
