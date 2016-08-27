@@ -4,7 +4,7 @@ module Chip8
   class Main
     attr_reader :memory, :registers, :stack
     attr_accessor :draw_flag, :program_counter, :register_i, :running,
-      :delay_timer, :display
+      :delay_timer, :display, :step
 
     WIDTH = 64
     HEIGHT = 32
@@ -19,6 +19,7 @@ module Chip8
       @delay_timer = 0
       @running = false
       @display = new_matrix
+      @step = 0
 
       (0..0x1000 - 1).each do |i|
         memory[i] = 0
@@ -66,6 +67,12 @@ module Chip8
     end
 
     def run
+      self.step += 1
+
+      if step % 2 == 0 && delay_timer > 0
+        self.delay_timer -= 1
+      end
+
       if program_counter >= 0x1000
         self.running = false
         return
@@ -181,7 +188,7 @@ module Chip8
         self.program_counter = sub_routine_pointer + registers[0]
 
       when 0xC000
-        registers[register_index_1] = rand(0, 255) & compared_value
+        registers[register_index_1] = rand(0..255) & compared_value
       when 0xD000
         registers[0xF] = 0
         height = opcode & 0x000F
