@@ -15,6 +15,14 @@ module Chip8
       @timer = 0
     end
 
+    def button_down(key)
+      @chip.press(key)
+    end
+
+    def button_up(key)
+      @chip.release(key)
+    end
+
     def update
       if @chip.running
         self.caption = "Something #{@timer}"
