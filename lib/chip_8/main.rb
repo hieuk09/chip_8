@@ -88,8 +88,8 @@ module Chip8
       self.running = true
     end
 
-    def run
-      interpreter.run
+    def run(renderer)
+      interpreter.run(renderer)
     end
 
     def press(key)

@@ -4,7 +4,7 @@ module Chip8
       @chip = chip
     end
 
-    def run
+    def run(renderer)
       chip.step += 1
 
       if chip.step % 2 == 0 && chip.delay_timer > 0
@@ -166,6 +166,8 @@ module Chip8
 
           chip.draw_flag = true
         end
+
+        renderer.update_buffer(chip.display)
 
       when 0xE000
         key = chip.registers[(opcode & 0x0F00) >> 8]

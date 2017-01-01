@@ -1,4 +1,5 @@
 require 'gosu'
+require 'texplay'
 
 module Chip8
   class Renderer < Gosu::Window
@@ -17,16 +18,17 @@ module Chip8
 
     def button_down(key)
       @chip.press(key)
+      self.caption = "Down ##{key}"
     end
 
     def button_up(key)
       @chip.release(key)
+      self.caption = "Release ##{key}"
     end
 
     def update
       if @chip.running
-        self.caption = "Something #{@timer}"
-        @chip.run
+        @chip.run(self)
         @timer += 1
       else
         close
@@ -35,17 +37,23 @@ module Chip8
 
     def draw
       if @chip.draw_flag
-        @chip.display.each_with_index do |tile, x, y|
-          color = tile == 0 ? Gosu::Color::BLACK : Gosu::Color::WHITE
-          draw_quad(
-            x * 10, y * 10, color,
-            (x + 1) * 10, y * 10, color,
-            x * 10, (y + 1) * 10, color,
-            (x + 1) * 10, (y + 1) * 10, color,
-            0
-          )
+        display_buffer.draw(0, 0, 1)
+      end
+    end
+
+    def update_buffer(display)
+      display.each_with_index do |tile, x, y|
+        color = tile == 0 ? Gosu::Color::BLACK : Gosu::Color::WHITE
+        display_buffer.paint do
+          rect x*10, y*10, (x + 1)*10, (y + 1)*10, color: color, fill: true
         end
       end
+    end
+
+    private
+
+    def display_buffer
+      @display_buffer ||= TexPlay.create_blank_image(self, WIDTH, HEIGHT)
     end
   end
 end
